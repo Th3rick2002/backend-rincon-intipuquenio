@@ -7,6 +7,7 @@ import {serveStatic} from "hono/bun";
 import authRoute from "./routes/auth.route";
 import userRoute from "./routes/user.route";
 import productRoute from "./routes/product.route";
+import orderRoute from "./routes/order.route";
 
 const app = new Hono()
 
@@ -28,6 +29,7 @@ app.get('/health', (c)=> c.text('OK'))
 app.route('/api', userRoute)
 app.route('/api', authRoute)
 app.route('/api', productRoute)
+app.route('/api', orderRoute)
 app.use('/images/*', serveStatic({ root: './public' }))
 
 
