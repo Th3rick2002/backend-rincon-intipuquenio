@@ -15,7 +15,7 @@ const app = new Hono()
 app.use(
     '*',
     cors({
-        origin: 'https://localhost:5173',
+        origin: 'https://rincon-intipuquenio.netlify.app/',
         credentials: true,
     }))
 app.use(prettyJSON())
