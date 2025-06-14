@@ -33,7 +33,7 @@ productRouter.patch(
     '/products/:id',
     jwt({ secret: environments.jwt_secret }),
     isAutenticate,
-    isRole(['admin', 'client']),
+    isRole(['admin']),
     zValidator('json', productSchemaUpdate),
     (c)=> productController.updateProduct(c)
 )

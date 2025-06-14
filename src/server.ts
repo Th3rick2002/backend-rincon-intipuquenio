@@ -11,7 +11,12 @@ import productRoute from "./routes/product.route";
 const app = new Hono()
 
 // configuration
-app.use('*', cors())
+app.use(
+    '*',
+    cors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+    }))
 app.use(prettyJSON())
 app.use(logger())
 
