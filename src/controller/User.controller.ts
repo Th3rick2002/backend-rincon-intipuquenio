@@ -1,7 +1,7 @@
 import type {User} from "../models/User.model";
 import {getDatabase} from "../database/databaseConnection";
 import {Context} from "hono";
-import {Collection, ObjectId, WithId} from "mongodb";
+import {Collection, ObjectId} from "mongodb";
 import {hashPassword, comparePassword} from "../middleware/hashPassword/hashPassword";
 import {Protected} from "../middleware/token/generateToken";
 
@@ -108,8 +108,6 @@ export class UserController {
             const users = await this.collection.find({}, {projection: {password: 0} }).toArray();
 
             if (users.length === 0) return c.json({success: false, message: 'No hay usuarios registrados'})
-
-
 
              return c.json({
                  success: true,
