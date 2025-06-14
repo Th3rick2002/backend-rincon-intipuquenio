@@ -1,7 +1,9 @@
 {
   "name": "api-rincon-intipuquenio",
   "scripts": {
-    "dev": "bun run --hot src/index.ts"
+    "dev": "bun run --hot src/index.ts",
+    "build": "bun build src/index.ts --outdir dist",
+    "start": "bun run dist/index.js"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.0",
