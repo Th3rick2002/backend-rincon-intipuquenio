@@ -9,6 +9,7 @@ export class Protected {
         if (!environments.jwt_secret) throw new Error('JWT_SECRET no definido en variables de entorno')
 
         const expiresIn = environments.jwt_expire || '6h';
+        const expireSeconds = 60 * 60 * 6
 
         //@ts-ignore
         const token = jwt.sign(
@@ -19,7 +20,7 @@ export class Protected {
 
         c.header(
             'Set-Cookie',
-            `access_token=${token}; HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${expiresIn}`,
+            `access_token=${token}; HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${expireSeconds}`,
         )
         return token;
     }
@@ -28,6 +29,7 @@ export class Protected {
         if (!environments.jwt_refresh_secret) throw new Error('JWT_SECRET no definido en variables de entorno')
 
         const expiresIn = environments.jwt_refresh_expire || '3d';
+        const refreshSeconds = 60 * 60 * 24 * 3
 
         //@ts-ignore
         const refresToken = jwt.sign(
@@ -38,7 +40,7 @@ export class Protected {
 
         c.header(
             'Set-Cookie',
-            `refresh_token=${refresToken};HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${expiresIn}`
+            `refresh_token=${refresToken};HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${refreshSeconds}`
         )
         return refresToken
     }
