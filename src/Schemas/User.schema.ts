@@ -24,4 +24,6 @@ export const loginUser = z.object({
     password: z.string().min(8).max(30),
 })
 
-export const validID = z.string().uuid()
+export const validID = z.object({
+    id: z.string().uuid()
+})

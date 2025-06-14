@@ -1,49 +1,62 @@
 import { Hono } from "hono";
-import { jwt } from "hono/jwt";
 import { ProductController } from "../controller/Product.controller";
 import { zValidator } from "@hono/zod-validator";
-import { productSchema, productSchemaUpdate } from "../Schemas/Product.schema";
 import { isAutenticate } from "../middleware/token/isAutenticate";
 import { isRole } from "../middleware/token/isRole";
-import {uploadImage} from "../middleware/uploadImage/uploadImage";
-import { environments } from "../services/environment.service";
+import { uploadImage } from "../middleware/uploadImage/uploadImage";
+import { jwtFromSignedCookie } from "../middleware/token/TokenFromCookie";
+import { z } from "zod";
 
 const productRouter = new Hono();
-const productController = new ProductController()
+const productController = new ProductController();
 
+// Validador para ID de MongoDB
+const mongoIdValidator = z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, "ID de MongoDB inválido")
+});
+
+// Obtener todos los productos (público - sin autenticación)
 productRouter.get(
     '/products',
-    jwt({ secret: environments.jwt_secret }),
-    isAutenticate,
-    isRole(['admin', 'client']),
-    (c)=> productController.getProducts(c)
-)
+    (c) => productController.getProducts(c)
+);
 
+// Obtener producto por ID (público - sin autenticación)
+productRouter.get(
+    '/products/:id',
+    zValidator('param', mongoIdValidator),
+    (c) => productController.getProductById(c)
+);
+
+// Crear producto (solo admin)
 productRouter.post(
     '/products',
-    jwt({ secret: environments.jwt_secret }),
+    jwtFromSignedCookie,
     isAutenticate,
     isRole(['admin']),
     uploadImage,
+    (c) => productController.createProduct(c)
+);
 
-    (c)=> productController.createProduct(c)
-)
-
+// Actualizar producto (solo admin)
 productRouter.patch(
     '/products/:id',
-    jwt({ secret: environments.jwt_secret }),
+    zValidator('param', mongoIdValidator),
+    jwtFromSignedCookie,
     isAutenticate,
     isRole(['admin']),
-    zValidator('json', productSchemaUpdate),
-    (c)=> productController.updateProduct(c)
-)
+    uploadImage, // Permitir actualizar imagen opcionalmente
+    (c) => productController.updateProduct(c)
+);
 
+// Eliminar producto (solo admin)
 productRouter.delete(
     '/products/:id',
-    jwt({ secret: environments.jwt_secret }),
+    zValidator('param', mongoIdValidator),
+    jwtFromSignedCookie,
     isAutenticate,
     isRole(['admin']),
     (c) => productController.deleteProduct(c)
-)
+);
 
 export default productRouter;
