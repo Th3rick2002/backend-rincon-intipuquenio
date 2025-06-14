@@ -19,7 +19,7 @@ export class Protected {
 
         c.header(
             'Set-Cookie',
-            `access_token=${token}; HttpOnly; Path=/; SameSite=None; Max-Age=${expiresIn}`,
+            `access_token=${token}; HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${expiresIn}`,
         )
         return token;
     }
@@ -38,7 +38,7 @@ export class Protected {
 
         c.header(
             'Set-Cookie',
-            `refresh_token=${refresToken};HttpOnly; Path=/; SameSite=None; Max-Age=${expiresIn}`
+            `refresh_token=${refresToken};HttpOnly; Path=/; Secure; SameSite=None; Max-Age=${expiresIn}`
         )
         return refresToken
     }
