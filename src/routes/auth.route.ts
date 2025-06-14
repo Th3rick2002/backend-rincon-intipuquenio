@@ -6,6 +6,7 @@ import {createUser, loginUser} from "../Schemas/User.schema";
 import {Protected} from "../middleware/token/generateToken";
 import {isAutenticate} from "../middleware/token/isAutenticate";
 import {environments} from "../services/environment.service";
+import {jwtFromSignedCookie} from "../middleware/token/TokenFromCookie"
 
 const authRouter = new Hono();
 const userController = new UserController()
@@ -29,8 +30,9 @@ authRouter.post(
 
 authRouter.get(
     '/auth/profile',
-    jwt({ secret: environments.jwt_secret }),
+    jwtFromSignedCookie,
     isAutenticate,
-    (c) => userController.profile(c))
+    (c) => userController.profile(c)
+)
 
 export default authRouter;
