@@ -1,11 +1,10 @@
-import { MiddlewareHandler } from 'hono'
-import { getSignedCookie } from 'hono/cookie'
 import { verify } from 'jsonwebtoken'
+import { MiddlewareHandler } from 'hono'
 import { environments } from '../../services/environment.service'
+import { getCookie, setCookie } from 'hono/cookie'
 
-export const jwtFromSignedCookie: MiddlewareHandler = async (c, next) => {
-    const cookies = await getSignedCookie(c, environments.jwt_secret)
-    const token = cookies.access_token
+export const jwtFromCookie: MiddlewareHandler = async (c, next) => {
+    const token = getCookie(c, 'access_token')
 
     if (!token) {
         return c.json({ success: false, message: 'Token no encontrado' }, 401)
